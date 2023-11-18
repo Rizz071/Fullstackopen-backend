@@ -9,6 +9,12 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(express.static('dist'))
 
+
+const mongoose = require('mongoose')
+
+
+
+
 let persons = [
     {
         "id": 1,
