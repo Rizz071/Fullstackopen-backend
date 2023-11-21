@@ -67,10 +67,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
 
-    if (!request.body || !request.body.name || !request.body.number) {
-        return response.status(400).json({ error: 'content missing' })
-    }
-
     const newPerson = new Person({
         name: request.body.name,
         number: request.body.number
@@ -83,6 +79,8 @@ app.post('/api/persons', (request, response, next) => {
 
 
 const errorHandler = (error, request, response, next) => {
+    console.log("errorHandler func started...", error.name)
+
     console.error(error.message)
 
     if (error.name === 'CastError') {
@@ -90,7 +88,6 @@ const errorHandler = (error, request, response, next) => {
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
     }
-
     next(error)
 }
 
