@@ -54,13 +54,13 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
 
-    if (!request.body || !request.body.number) {
+    if (!request.body || !request.body.name || !request.body.number) {
         return response.status(400).json({ error: 'content missing' })
     }
 
     const newPerson = new Person({
         name: request.body.name,
-        phone: request.body.number
+        number: request.body.number
     })
 
     newPerson.save().then(savedPerson => {
