@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
 
@@ -9,6 +11,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(express.static('dist'))
 
+const Person = require('./models/person')
 
 
 
@@ -50,13 +53,14 @@ app.get('/api/info', (request, response) => {
 app.get('/api/persons/:id', (request, response) => {
 
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
 
-    if (!person) {
-        response.status(404).end()
-    } else {
-        response.json(person)
-    }
+    Person.findById(request.params.id).then(person => {
+        if (!person) {
+            response.status(404).end()
+        } else {
+            response.json(person)
+        }
+    })
 })
 
 
@@ -102,7 +106,8 @@ app.post('/api/persons', (request, response) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
+// const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
