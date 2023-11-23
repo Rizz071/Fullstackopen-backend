@@ -67,12 +67,16 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
 
+    console.log(request.body.name, request.body.number)
     const newPerson = new Person({
         name: request.body.name,
         number: request.body.number
     })
 
-    newPerson.save()
+    console.log(newPerson)
+
+    newPerson
+        .save()
         .then(savedPerson => response.json(savedPerson))
         .catch(error => next(error))
 })
