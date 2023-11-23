@@ -6,7 +6,7 @@ const app = express()
 app.use(express.json())
 var morgan = require('morgan')
 
-morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('body', function (req) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.use(express.static('dist'))
@@ -17,17 +17,12 @@ app.use(express.static('dist'))
 const Person = require('./models/person')
 
 
-app.get('/api/persons', (request, response, next) => {
+app.get('/api/persons', (request, response) => {
     Person.find({}).then(result => {
         response.json(result)
     })
 })
 
-// app.get('/api/info', (request, response) => {
-//     response.send(
-//         `<p>Phonebook has info for ${persons.length} people</p>
-//         <p>${new Date()}</p>`)
-// })
 
 app.get('/api/persons/:id', (request, response, next) => {
 
@@ -47,11 +42,12 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
 
     Person.findByIdAndDelete(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
 })
+
 
 app.put('/api/persons/:id', (request, response, next) => {
 
@@ -64,6 +60,7 @@ app.put('/api/persons/:id', (request, response, next) => {
         })
         .catch(error => next(error))
 })
+
 
 app.post('/api/persons', (request, response, next) => {
 
@@ -100,7 +97,6 @@ app.use(errorHandler)
 
 
 const PORT = process.env.PORT
-// const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
